@@ -14,3 +14,11 @@ module.exports.cleanObject = (data, fillable) => {
   })
   return newObject
 }
+
+module.exports.removeHiddenObject = (data, hidden) => {
+  let newObject = {}
+  Object.keys(data).forEach((key) => {
+    if (!hidden.includes(key)) { newObject = Object.assign(newObject, { [key]: data[key] }) }
+  })
+  return newObject
+}

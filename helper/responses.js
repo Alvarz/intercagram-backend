@@ -22,6 +22,16 @@ module.exports.error = (message, error) => {
 }
 
 /*
+ * response with un auth message
+ * @param {string} the message
+ * @param {object} response data
+ * @return {json}
+ */
+module.exports.unAuth = (_message, res) => {
+  return res.status(401).json({ message: _message })
+}
+
+/*
  * response with a success message
  * @param {string} the message
  * @param {object} the response data

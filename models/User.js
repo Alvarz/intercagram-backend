@@ -45,6 +45,8 @@ const UserSchema = new mongoose.Schema({
 /** fillable fields array. */
 UserSchema.statics.fillable = ['name', 'lastname', 'nickname', 'email', 'password' ]
 
+/** fillable fields array. */
+UserSchema.statics.hidden = ['password', 'token' ]
 /** attach of the paginate plugin to the Schema. */
 UserSchema.plugin(mongoosePaginate)
 
