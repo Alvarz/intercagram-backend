@@ -4,19 +4,22 @@
 /** Mongose lib. */
 const mongoose = require('mongoose')
 
+const Schema = mongoose.Schema
 /** Mongose pagination lib. */
 const mongoosePaginate = require('mongoose-paginate')
 
 /** Comment Shema. */
 const CommentSchema = new mongoose.Schema({
 
-  pic_id: {
-    type: String,
+  pic: {
+    type: Schema.Types.ObjectId,
+    ref: 'Pic',
     required: true,
-    unique: true
+    unique: false
   },
-  user_id: {
-    type: String,
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
     required: true,
     unique: false
   },
@@ -28,7 +31,7 @@ const CommentSchema = new mongoose.Schema({
 }, { timestamps: true }, { strict: true })
 
 /** fillable fields array. */
-CommentSchema.statics.fillable = ['pic_id', 'user_id', 'description' ]
+CommentSchema.statics.fillable = ['pic', 'user', 'description' ]
 
 /** fillable fields array. */
 CommentSchema.statics.hidden = []

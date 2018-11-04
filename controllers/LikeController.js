@@ -30,7 +30,7 @@ module.exports = class LikeController {
       return res.json(error('there was an error', err))
     }
 
-    req.body['user_id'] = resp.data
+    req.body['user'] = resp.data
     console.log(req.body)
 
     const cleaned = cleanObject(req.body, Like.fillable)

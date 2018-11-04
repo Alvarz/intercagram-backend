@@ -34,13 +34,17 @@ module.exports = class PicController {
     if (selectedPage < 1) { selectedPage = 1 }
 
     /* fetch users paginated */
-    let [err, resp] = await to(Pic.paginate({ user_id: user_id }, { page: selectedPage, limit: limit }))
+    let [err, picsArray] = await to(Pic.paginate({ user: user_id }, { page: selectedPage,
+      limit: limit
+      // populate: { path: 'user', select: ['name', 'lastname', 'nickname', 'email'] }
+    }))
     if (err) {
       console.error(err)
       return res.json(error('there was an error', err))
     }
 
-    return res.json(success('ok', resp))
+    // await this.computeAllPicsAndComments(picsArray)
+    return res.json(success('ok', picsArray))
   }
 
   /*
@@ -59,13 +63,18 @@ module.exports = class PicController {
     if (selectedPage < 1) { selectedPage = 1 }
 
     /* fetch users paginated */
-    let [err, resp] = await to(Pic.paginate({}, { page: selectedPage, limit: limit }))
+    let [err, picsArray] = await to(Pic.paginate({}, { page: selectedPage,
+      limit: limit
+      // populate: { path: 'user', select: ['name', 'lastname', 'nickname', 'email'] }
+    }))
     if (err) {
       console.error(err)
       return res.json(error('there was an error', err))
     }
 
-    return res.json(success('fetching data', resp))
+    // await this.computeAllPicsAndComments(picsArray)
+
+    return res.json(success('fetching data', picsArray))
   }
 
   /*
@@ -78,14 +87,14 @@ module.exports = class PicController {
   async getData (req, res) {
     let id = req.params.id
 
-    let [err, resp] = await to(Pic.findById(id))
+    let [err, pic] = await to(Pic.findById(id))
     if (err) {
       console.error(err)
       return res.json(error('there was an error', err))
     }
+    // await this.computeSingleLikesAndComments(pic)
     /** clean the user of hidden elements and returns it */
-    const cleaned = this.cleanObjectFromHidden(resp)
-    return res.json(success('login succefully', cleaned))
+    return res.json(success('ok', pic))
   }
 
   /*
@@ -123,7 +132,7 @@ module.exports = class PicController {
       /** get the data from the body */
       let body = req.body
       /** set the user_id from token response */
-      body['user_id'] = resp.data
+      body['user'] = resp.data
       /** get the url of data */
       body['url'] = uploaded[key]
 
@@ -159,5 +168,32 @@ module.exports = class PicController {
    * */
   async deleteData (req, res) {
     return res.json({ message: 'removing data' })
+  }
+
+  /*
+   * compute the comments and likes of given pics
+   * @async
+   * @param {array} picsArray - the array to be computed
+   * @return {promise}
+   * */
+  async computeAllPicsAndComments (picsArray) {
+    const self = this
+
+    if (picsArray.length < 1) { return [] }
+    return picsArray.map(async (pic) => {
+      let res = await self.computeSingleLikesAndComments(pic)
+      return res
+    })
+  }
+
+  /*
+   * compute the comments and likes of given pic
+   * @async
+   * @param {Pic} picsArray - the pic to be computed
+   * @return {promise}
+   * */
+  async computeSingleLikesAndComments (pic) {
+    await pic.computeLikes()
+    await pic.computeComments()
   }
 }

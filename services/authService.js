@@ -18,7 +18,7 @@ module.exports = class authService {
   static generateToken (user) {
     /** generate the jwt using standard algorithm and 1 hour expiration */
     return jwt.sign({
-      exp: Math.floor(Date.now() / 1000) + (60 * 60),
+      // exp: Math.floor(Date.now() / 1000) + (60 * 60),
       data: user._id
     }, this.salt)
   }

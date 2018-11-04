@@ -3,9 +3,11 @@
 
 /** Mongose lib. */
 const mongoose = require('mongoose')
-
+const Schema = mongoose.Schema
 /** Mongose pagination lib. */
 const mongoosePaginate = require('mongoose-paginate')
+const Like = require('./Like')
+const comment = require('./Comment')
 
 /** Pic Shema. */
 const PicSchema = new mongoose.Schema({
@@ -21,8 +23,14 @@ const PicSchema = new mongoose.Schema({
     unique: false,
     default: 0
   },
-  comments: {
+  commentsQty: {
     type: Number,
+    required: false,
+    unique: false,
+    default: 0
+  },
+  comments: {
+    type: [Object],
     required: false,
     unique: false
   },
@@ -31,15 +39,79 @@ const PicSchema = new mongoose.Schema({
     required: false,
     unique: false
   },
-  user_id: {
-    type: String,
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
     required: true,
     unique: false
   }
 }, { timestamps: true }, { strict: true })
 
 /** fillable fields array. */
-PicSchema.statics.fillable = ['url', 'likes', 'comments', 'description', 'user_id' ]
+PicSchema.statics.fillable = ['url', 'likes', 'comments', 'description', 'user' ]
+
+/*
+ * compute the comments of current pic
+ * @async
+ * @return {void}
+ * */
+PicSchema.methods.computeComments = async function (doc, next) {
+  if (Array.isArray(doc)) {
+    for (let key in doc) {
+      let comments = await comment.find({ pic: doc[key]._id })
+      doc[key].commentsQty = comments.length
+      doc[key].comments = comments
+    }
+  } else {
+    let comments = await comment.find({ pic: doc._id })
+    doc.commentsQty = comments.length
+    doc.comments = comments
+  }
+  next()
+}
+/*
+ * compute the likes of current pic
+ * @async
+ * @return {void}
+ * */
+PicSchema.methods.computeLikes = async function (doc, next) {
+  if (Array.isArray(doc)) {
+    for (let key in doc) {
+      doc[key].likes = await Like.countDocuments({ pic: doc[key]._id })
+    }
+  } else {
+    doc.likes = await Like.countDocuments({ pic: doc._id })
+  }
+
+  console.log(doc)
+  console.log('=====================')
+  next()
+}
+
+/*
+ * middleware to compute the user data of this pic
+ * @param {function} next
+ * */
+PicSchema.methods.autoPopulate = function (next) {
+  this.populate({ path: 'user', select: ['name', 'lastname', 'nickname', 'email'] })
+  next()
+}
+
+/*
+ * adding middlewares on pre events
+ * */
+PicSchema
+  .pre('find', PicSchema.methods.autoPopulate)
+  .pre('findOne', PicSchema.methods.autoPopulate)
+
+/*
+ * adding middlewares on post events
+ * */
+PicSchema
+  .post('find', PicSchema.methods.computeLikes)
+  .post('findOne', PicSchema.methods.computeLikes)
+  .post('find', PicSchema.methods.computeComments)
+  .post('findOne', PicSchema.methods.computeComments)
 
 /** fillable fields array. */
 PicSchema.statics.hidden = []
