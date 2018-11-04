@@ -3,6 +3,7 @@
 const UserCtrl = require('../controllers/UserController')
 const PicCtrl = require('../controllers/PicController')
 const CommentCtrl = require('../controllers/PicController')
+const LikeCtrl = require('../controllers/LikeController')
 
 /** Class Main system router. */
 module.exports = class router {
@@ -15,6 +16,7 @@ module.exports = class router {
     this.userCtrl = new UserCtrl()
     this.picCtrl = new PicCtrl()
     this.commentCtrl = new CommentCtrl()
+    this.likeCtrl = new LikeCtrl()
     this.router.use('/api', this.userCtrl.verifyToken.bind(this.userCtrl))
   }
 
@@ -30,6 +32,8 @@ module.exports = class router {
     this.router.put('/api/users/:id', this.userCtrl.putData.bind(this.userCtrl))
     this.router.delete('/api/users/:id', this.userCtrl.deleteData.bind(this.userCtrl))
 
+    /** Like related routes */
+    this.router.post('/api/pics/like', this.likeCtrl.postData.bind(this.likeCtrl))
     /** photo related routes */
     this.router.get('/api/users/:id/pics', this.picCtrl.fetchDataByUser.bind(this.picCtrl))
     this.router.get('/api/pics/:id', this.picCtrl.getData.bind(this.picCtrl))
@@ -38,7 +42,7 @@ module.exports = class router {
     this.router.put('/api/pics/:id', this.picCtrl.putData.bind(this.picCtrl))
     this.router.delete('/api/pics/:id', this.picCtrl.deleteData.bind(this.picCtrl))
 
-    /** photo related routes */
+    /** comment related routes */
     this.router.get('/api/comments', this.commentCtrl.fetchData.bind(this.commentCtrl))
     this.router.get('/api/comments/:id', this.commentCtrl.getData.bind(this.commentCtrl))
     this.router.post('/api/comments', this.commentCtrl.postData.bind(this.commentCtrl))
