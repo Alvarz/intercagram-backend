@@ -2,7 +2,7 @@
 
 const UserCtrl = require('../controllers/UserController')
 const PicCtrl = require('../controllers/PicController')
-const CommentCtrl = require('../controllers/PicController')
+const CommentCtrl = require('../controllers/CommentController')
 const LikeCtrl = require('../controllers/LikeController')
 
 /** Class Main system router. */

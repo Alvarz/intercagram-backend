@@ -1,12 +1,10 @@
 'use strict'
 
 const { cleanObject } = require('../helper/objects')
-const uploadService = require('../services/uploadService')
-const { unAuth, success, error } = require('../helper/responses')
+const { success, error } = require('../helper/responses')
 const authService = require('../services/authService')
 const to = require('../helper/to')
 const Like = require('../models/Like')
-const Pic = require('../models/Pic')
 /** Class Photo controller. */
 module.exports = class LikeController {
   /*

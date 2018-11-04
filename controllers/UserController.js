@@ -59,7 +59,7 @@ module.exports = class UserController {
    * */
   async verifyToken (req, res, next) {
     let [err, data] = await to(authService.verifyToken(req))
-    if (err) { return res.json(unAuth('you are not allowes', res)) }
+    if (err) { return unAuth('you are not allowes', res) }
 
     /** call the next middleware */
     next()

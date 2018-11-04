@@ -1,5 +1,10 @@
 'use strict'
 
+const { cleanObject } = require('../helper/objects')
+const { success, error } = require('../helper/responses')
+const authService = require('../services/authService')
+const to = require('../helper/to')
+const Comment = require('../models/Comment')
 /** Class Comment controller. */
 module.exports = class CommentController {
   /*
@@ -39,7 +44,24 @@ module.exports = class CommentController {
    * @return {promise}
    * */
   async postData (req, res) {
-    return res.json({ message: 'posting data' })
+    /** search the user id information on the token */
+    let [err, resp] = await to(authService.getUserFromToken(req))
+    if (err) {
+      console.error(err)
+      return res.json(error('there was an error', err))
+    }
+
+    req.body['user_id'] = resp.data
+    console.log(req.body)
+
+    const cleaned = cleanObject(req.body, Comment.fillable)
+    let [ero, created] = await to(Comment.create(cleaned))
+    if (ero) {
+      console.error(ero)
+      return res.json(error('there was an error', ero))
+    }
+
+    return res.json(success('Element was created', created))
   }
 
   /*
