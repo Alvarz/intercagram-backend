@@ -5,6 +5,7 @@ const PicCtrl = require('../controllers/PicController')
 const CommentCtrl = require('../controllers/CommentController')
 const LikeCtrl = require('../controllers/LikeController')
 
+const cors = require('cors')
 /** Class Main system router. */
 module.exports = class router {
   /*
@@ -17,6 +18,7 @@ module.exports = class router {
     this.picCtrl = new PicCtrl()
     this.commentCtrl = new CommentCtrl()
     this.likeCtrl = new LikeCtrl()
+    // this.router.options('*', cors()) // enables cors pre-flight for every route
     this.router.use('/api', this.userCtrl.verifyToken.bind(this.userCtrl))
   }
 
