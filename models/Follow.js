@@ -32,7 +32,7 @@ FollowSchema.statics.fillable = ['followed', 'follower' ]
  * @param {function} next
  * */
 FollowSchema.methods.autoPopulate = function (next) {
-  this.populate({ path: 'follower', select: ['name', 'lastname', 'nickname', 'email'] })
+  this.populate({ path: 'User', select: ['name', 'lastname', 'nickname', 'email'] })
   this.populate({ path: 'followed', select: ['name', 'lastname', 'nickname', 'email'] })
   next()
 }
@@ -40,9 +40,9 @@ FollowSchema.methods.autoPopulate = function (next) {
 /*
  * adding middlewares on pre events
  * */
-// FollowSchema
-// .pre('find', FollowSchema.methods.autoPopulate)
-// .pre('findOne', FollowSchema.methods.autoPopulate)
+FollowSchema
+  .pre('find', FollowSchema.methods.autoPopulate)
+  .pre('findOne', FollowSchema.methods.autoPopulate)
 
 /** fillable fields array. */
 FollowSchema.statics.hidden = []

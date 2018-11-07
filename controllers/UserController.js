@@ -86,6 +86,11 @@ module.exports = class UserController {
       console.error(err)
       return res.json(error('there was an error', err))
     }
+
+    /** await resp.docs.forEach(async (user) => {
+      await user.computeFollowing()
+      await user.computeFollowers()
+    }) */
     /** clean all users from hidden fields */
     resp.docs = this.cleanAllElements(resp.docs)
     return res.json(success('fetching data', resp))
@@ -106,6 +111,10 @@ module.exports = class UserController {
       console.error(err)
       return res.json(error('there was an error', err))
     }
+
+    /** compute the followers of the user and the follwing by the user */
+    await resp.computeFollowing()
+    await resp.computeFollowers()
     /** clean the user of hidden elements and returns it */
     const cleaned = this.cleanObjectFromHidden(resp)
     return res.json(success('ok', cleaned))
