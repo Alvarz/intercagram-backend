@@ -83,8 +83,6 @@ PicSchema.methods.computeLikes = async function (doc, next) {
     doc.likes = await Like.countDocuments({ pic: doc._id })
   }
 
-  console.log(doc)
-  console.log('=====================')
   next()
 }
 

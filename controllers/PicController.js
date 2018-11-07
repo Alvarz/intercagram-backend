@@ -1,7 +1,7 @@
 'use strict'
 
 const { cleanObject } = require('../helper/objects')
-const uploadService = require('../services/uploadService')
+const UploadService = require('../services/uploadService')
 const { unAuth, success, error } = require('../helper/responses')
 const authService = require('../services/authService')
 const to = require('../helper/to')
@@ -25,7 +25,7 @@ module.exports = class PicController {
   async fetchDataByUser (req, res) {
     console.log('aca')
     /** the user who own the pics */
-    let user_id = req.params.id
+    let userId = req.params.id
     /** Access the provided 'page' and 'limt' query parameters */
     let selectedPage = req.query.page
     let limit = req.query.limit || 10
@@ -34,7 +34,7 @@ module.exports = class PicController {
     if (selectedPage < 1) { selectedPage = 1 }
 
     /* fetch users paginated */
-    let [err, picsArray] = await to(Pic.paginate({ user: user_id }, { page: selectedPage,
+    let [err, picsArray] = await to(Pic.paginate({ user: userId }, { page: selectedPage,
       limit: limit
       // populate: { path: 'user', select: ['name', 'lastname', 'nickname', 'email'] }
     }))
@@ -113,7 +113,7 @@ module.exports = class PicController {
     }
 
     /** uploader instance */
-    const uploadServ = new uploadService()
+    const uploadServ = new UploadService()
 
     /** upload all the pics */
     let [eror, uploaded] = await to(uploadServ.upload(req))

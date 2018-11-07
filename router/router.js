@@ -4,6 +4,7 @@ const UserCtrl = require('../controllers/UserController')
 const PicCtrl = require('../controllers/PicController')
 const CommentCtrl = require('../controllers/CommentController')
 const LikeCtrl = require('../controllers/LikeController')
+const FollowCtrl = require('../controllers/FollowController')
 
 const cors = require('cors')
 /** Class Main system router. */
@@ -18,6 +19,7 @@ module.exports = class router {
     this.picCtrl = new PicCtrl()
     this.commentCtrl = new CommentCtrl()
     this.likeCtrl = new LikeCtrl()
+    this.followCtrl = new FollowCtrl()
     // this.router.options('*', cors()) // enables cors pre-flight for every route
     this.router.use('/api', this.userCtrl.verifyToken.bind(this.userCtrl))
   }
@@ -50,6 +52,11 @@ module.exports = class router {
     this.router.post('/api/comments', this.commentCtrl.postData.bind(this.commentCtrl))
     this.router.put('/api/comments/:id', this.commentCtrl.putData.bind(this.commentCtrl))
     this.router.delete('/api/comments/:id', this.commentCtrl.deleteData.bind(this.commentCtrl))
+
+    this.router.get('/api/followers/:user_id', this.followCtrl.fetchFollowers.bind(this.followCtrl))
+    this.router.get('/api/following/:user_id', this.followCtrl.fetchFollowing.bind(this.followCtrl))
+    this.router.post('/api/follow', this.followCtrl.followUser.bind(this.followCtrl))
+    this.router.delete('/api/unfollow/:user_id', this.followCtrl.unfollowUser.bind(this.followCtrl))
 
     this.router.post('/signin', this.userCtrl.signin.bind(this.userCtrl))
     return this.router
