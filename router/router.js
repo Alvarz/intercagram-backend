@@ -5,6 +5,7 @@ const PicCtrl = require('../controllers/PicController')
 const CommentCtrl = require('../controllers/CommentController')
 const LikeCtrl = require('../controllers/LikeController')
 const FollowCtrl = require('../controllers/FollowController')
+const FeedCtrl = require('../controllers/FeedController')
 
 const cors = require('cors')
 /** Class Main system router. */
@@ -20,6 +21,7 @@ module.exports = class router {
     this.commentCtrl = new CommentCtrl()
     this.likeCtrl = new LikeCtrl()
     this.followCtrl = new FollowCtrl()
+    this.feedCtrl = new FeedCtrl()
     // this.router.options('*', cors()) // enables cors pre-flight for every route
     this.router.use('/api', this.userCtrl.verifyToken.bind(this.userCtrl))
   }
@@ -39,6 +41,7 @@ module.exports = class router {
     /** Like related routes */
     this.router.post('/api/pics/like', this.likeCtrl.postData.bind(this.likeCtrl))
     /** photo related routes */
+    this.router.get('/api/feed', this.feedCtrl.fetchFeed.bind(this.feedCtrl))
     this.router.get('/api/users/:id/pics', this.picCtrl.fetchDataByUser.bind(this.picCtrl))
     this.router.get('/api/pics/:id', this.picCtrl.getData.bind(this.picCtrl))
     this.router.get('/api/pics', this.picCtrl.fetchData.bind(this.picCtrl))
