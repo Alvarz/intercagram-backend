@@ -48,10 +48,10 @@ module.exports = class PicController {
 
     let follwedArr = []
     for (let f in followed) {
+      if (followed[f].followed === null) continue
+
       follwedArr.push(new ObjectId(followed[f].followed._id))
     }
-
-    console.log(follwedArr)
 
     /** validate page is not < than 0 */
     if (selectedPage < 1) { selectedPage = 1 }
@@ -66,6 +66,12 @@ module.exports = class PicController {
     if (err) {
       console.error(err)
       return res.json(error('there was an error', err))
+    }
+
+    if (picsArray.docs.length > 0) {
+      for (let key in picsArray.docs) {
+        await picsArray.docs[key].userLiked(userId)
+      }
     }
 
     // await this.computeAllPicsAndComments(picsArray)

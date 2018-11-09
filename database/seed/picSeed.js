@@ -14,7 +14,7 @@ module.exports = async () => {
     for (let i = 0; i < maxPics; i++) {
       try {
         let p = {
-          url: faker.image.imageUrl(),
+          url: 'https://picsum.photos/200',
           description: faker.lorem.text(),
           user: users[key]._id
         }

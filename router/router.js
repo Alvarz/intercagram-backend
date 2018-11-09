@@ -40,6 +40,7 @@ module.exports = class router {
 
     /** Like related routes */
     this.router.post('/api/pics/like', this.likeCtrl.postData.bind(this.likeCtrl))
+    this.router.delete('/api/pics/unlike/:id', this.likeCtrl.deleteData.bind(this.likeCtrl))
     /** photo related routes */
     this.router.get('/api/feed', this.feedCtrl.fetchFeed.bind(this.feedCtrl))
     this.router.get('/api/users/:id/pics', this.picCtrl.fetchDataByUser.bind(this.picCtrl))
@@ -59,7 +60,7 @@ module.exports = class router {
     this.router.get('/api/followers/:user_id', this.followCtrl.fetchFollowers.bind(this.followCtrl))
     this.router.get('/api/following/:user_id', this.followCtrl.fetchFollowing.bind(this.followCtrl))
     this.router.post('/api/follow', this.followCtrl.followUser.bind(this.followCtrl))
-    this.router.delete('/api/unfollow/:user_id', this.followCtrl.unfollowUser.bind(this.followCtrl))
+    this.router.delete('/api/follow/:user_id', this.followCtrl.unfollowUser.bind(this.followCtrl))
 
     this.router.post('/signin', this.userCtrl.signin.bind(this.userCtrl))
     return this.router

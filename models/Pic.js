@@ -44,6 +44,12 @@ const PicSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
     unique: false
+  },
+  wasLikedByUser: {
+    type: Boolean,
+    required: false,
+    unique: false,
+    default: false
   }
 }, { timestamps: true }, { strict: true })
 
@@ -90,6 +96,16 @@ PicSchema.methods.computeLikes = async function (doc, next) {
  * middleware to compute the user data of this pic
  * @param {function} next
  * */
+PicSchema.methods.userLiked = async function (userId) {
+  const res = await Like.countDocuments({ user: userId, pic: this._id })
+  console.log(res, this.id)
+  this.wasLikedByUser = (res > 0)
+}
+
+/*
+ * middleware to compute the user data of this pic
+ * @param {function} next
+ * */
 PicSchema.methods.autoPopulate = function (next) {
   this.populate({ path: 'user', select: ['name', 'lastname', 'nickname', 'email'] })
   next()
@@ -101,7 +117,6 @@ PicSchema.methods.autoPopulate = function (next) {
 PicSchema
   .pre('find', PicSchema.methods.autoPopulate)
   .pre('findOne', PicSchema.methods.autoPopulate)
-
 /*
  * adding middlewares on post events
  * */

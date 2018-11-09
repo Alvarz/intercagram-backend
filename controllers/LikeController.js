@@ -42,4 +42,31 @@ module.exports = class LikeController {
 
     return res.json(success('Element was created', created))
   }
+
+  /*
+   * to delete data
+   * @async
+   * @param {object} req - the request object
+   * @param {object} res - the response object
+   * @return {promise}
+   * */
+  async deleteData (req, res) {
+    let picId = req.params.id
+
+    /** search the user id information on the token */
+    let [err, resp] = await to(authService.getUserFromToken(req))
+    if (err) {
+      console.error(err)
+      return res.json(error('there was an error', err))
+    }
+    const currentUserId = resp.data
+
+    let [er, pic] = await to(Like.findOneAndDelete({ pic: picId, user: currentUserId }))
+    if (er) {
+      console.error(err)
+      return res.json(error('there was an error', er))
+    }
+
+    return res.json(success('Element was removed', {}))
+  }
 }

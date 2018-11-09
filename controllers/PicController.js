@@ -23,7 +23,13 @@ module.exports = class PicController {
    * @return {promise}
    * */
   async fetchDataByUser (req, res) {
-    console.log('aca')
+    /** search the user id information on the token */
+    let [err, resp] = await to(authService.getUserFromToken(req))
+    if (err) {
+      console.error(err)
+      return res.json(error('there was an error', err))
+    }
+    const currentUserId = resp.data
     /** the user who own the pics */
     let userId = req.params.id
     /** Access the provided 'page' and 'limt' query parameters */
@@ -34,13 +40,19 @@ module.exports = class PicController {
     if (selectedPage < 1) { selectedPage = 1 }
 
     /* fetch users paginated */
-    let [err, picsArray] = await to(Pic.paginate({ user: userId }, { page: selectedPage,
+    let [er, picsArray] = await to(Pic.paginate({ user: userId }, { page: selectedPage,
       limit: limit
       // populate: { path: 'user', select: ['name', 'lastname', 'nickname', 'email'] }
     }))
-    if (err) {
-      console.error(err)
-      return res.json(error('there was an error', err))
+    if (er) {
+      console.error(er)
+      return res.json(error('there was an error', er))
+    }
+
+    if (picsArray.docs.length > 0) {
+      for (let key in picsArray.docs) {
+        await picsArray.docs[key].userLiked(currentUserId)
+      }
     }
 
     // await this.computeAllPicsAndComments(picsArray)
@@ -55,6 +67,13 @@ module.exports = class PicController {
    * @return {promise}
    * */
   async fetchData (req, res) {
+    /** search the user id information on the token */
+    let [err, resp] = await to(authService.getUserFromToken(req))
+    if (err) {
+      console.error(err)
+      return res.json(error('there was an error', err))
+    }
+    const currentUserId = resp.data
     /** Access the provided 'page' and 'limt' query parameters */
     let selectedPage = req.query.page
     let limit = req.query.limit || 10
@@ -63,15 +82,20 @@ module.exports = class PicController {
     if (selectedPage < 1) { selectedPage = 1 }
 
     /* fetch users paginated */
-    let [err, picsArray] = await to(Pic.paginate({}, { page: selectedPage,
+    let [er, picsArray] = await to(Pic.paginate({}, { page: selectedPage,
       limit: limit
       // populate: { path: 'user', select: ['name', 'lastname', 'nickname', 'email'] }
     }))
-    if (err) {
-      console.error(err)
-      return res.json(error('there was an error', err))
+    if (er) {
+      console.error(er)
+      return res.json(error('there was an error', er))
     }
 
+    if (picsArray.docs.length > 0) {
+      for (let key in picsArray.docs) {
+        await picsArray.docs[key].userLiked(currentUserId)
+      }
+    }
     // await this.computeAllPicsAndComments(picsArray)
 
     return res.json(success('fetching data', picsArray))
@@ -87,11 +111,22 @@ module.exports = class PicController {
   async getData (req, res) {
     let id = req.params.id
 
-    let [err, pic] = await to(Pic.findById(id))
+    /** search the user id information on the token */
+    let [err, resp] = await to(authService.getUserFromToken(req))
     if (err) {
       console.error(err)
       return res.json(error('there was an error', err))
     }
+    const currentUserId = resp.data
+
+    let [er, pic] = await to(Pic.findById(id))
+    if (er) {
+      console.error(err)
+      return res.json(error('there was an error', er))
+    }
+
+    await pic.userLiked(currentUserId)
+
     // await this.computeSingleLikesAndComments(pic)
     /** clean the user of hidden elements and returns it */
     return res.json(success('ok', pic))

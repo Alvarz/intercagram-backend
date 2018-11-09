@@ -49,6 +49,12 @@ const UserSchema = new mongoose.Schema({
   followers: {
     type: [Object],
     required: false
+  },
+  wasFollowedByUser: {
+    type: Boolean,
+    required: false,
+    unique: false,
+    default: false
   }
 }, { timestamps: true }, { strict: true })
 
@@ -75,6 +81,16 @@ UserSchema.methods.computeFollowers = async function () {
  * */
 UserSchema.methods.computeFollowing = async function () {
   this.following = await Follow.find({ follower: this._id })
+}
+
+/*
+ * middleware to compute the user data of this pic
+ * @param {function} next
+ * */
+UserSchema.methods.userFollowed = async function (userId) {
+  const res = await Follow.countDocuments({ follower: userId, followed: this._id })
+  console.log(res, this.id)
+  this.wasFollowedByUser = (res > 0)
 }
 
 /** export. */
