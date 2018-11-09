@@ -112,9 +112,16 @@ module.exports = class UserController {
       return res.json(error('there was an error', err))
     }
 
-    /** compute the followers of the user and the follwing by the user */
+    if (resp === null) {
+      /** compute the followers of the user and the follwing by the user */
+
+      return res.json(success('ok', {}))
+    }
+
     await resp.computeFollowing()
     await resp.computeFollowers()
+
+    console.log(resp)
     /** clean the user of hidden elements and returns it */
     const cleaned = this.cleanObjectFromHidden(resp)
     return res.json(success('ok', cleaned))
