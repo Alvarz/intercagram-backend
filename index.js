@@ -9,15 +9,19 @@ const cors = require('cors')
 const path = require('path')
 require('./database/database')
 
+/** the router instance */
 let router = new Router(express, app)
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+/** file uplooad middleware */
 app.use(fileUpload())
+/**  cors middleware */
 app.use(cors())
 app.use('/', router.routes())
 // console.log(`${__dirname}/storage`)
 app.use('/photos', express.static(path.join(`${__dirname}/storage`)))
 
+/**  start server */
 let server = app.listen('3000', '127.0.0.1', () => {
   let host = server.address().address
   let port = server.address().port

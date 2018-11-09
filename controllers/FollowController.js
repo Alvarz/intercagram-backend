@@ -8,14 +8,7 @@ const Follow = require('../models/Follow')
 /** Class Photo controller. */
 module.exports = class FollowController {
   /*
-   * the class constructor
-   * */
-  constructor () {
-    console.log('constructor')
-  }
-
-  /*
-   * to fetch data
+   * to fetch followinda data of logged user
    * @async
    * @param {object} req - the request object
    * @param {object} res - the response object
@@ -45,7 +38,7 @@ module.exports = class FollowController {
     return res.json(success('ok', picsArray))
   }
   /*
-   * to fetch data
+   * to fetch followers data of logged users
    * @async
    * @param {object} req - the request object
    * @param {object} res - the response object
@@ -76,7 +69,7 @@ module.exports = class FollowController {
   }
 
   /*
-   * to post data
+   * to follow a user
    * @async
    * @param {object} req - the request object
    * @param {object} res - the response object
@@ -104,15 +97,15 @@ module.exports = class FollowController {
   }
 
   /*
-   * to post data
+   * to unfollow a user
    * @async
    * @param {object} req - the request object
    * @param {object} res - the response object
    * @return {promise}
    * */
   async unfollowUser (req, res) {
+    return res.json(success('WIP', {}))
     let userId = req.params.user_id
-
     /** search the user id information on the token */
     let [err, resp] = await to(authService.getUserFromToken(req))
     if (err) {

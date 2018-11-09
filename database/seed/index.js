@@ -7,7 +7,9 @@ const followSeed = require('./followSeed')
 const picSeed = require('./picSeed')
 const commentSeed = require('./commentSeed')
 const likeSeed = require('./likeSeed')
-
+/**
+ * @desc used to seed the datbase 
+ * */
 mongoose.connect('mongodb://localhost/intercagram-backend', { useNewUrlParser: true, useCreateIndex: true }, async function (err, conn) {
   if (err) throw err
   console.log('connected')

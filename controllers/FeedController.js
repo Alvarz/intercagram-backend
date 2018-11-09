@@ -4,20 +4,12 @@ const { unAuth, success, error } = require('../helper/responses')
 const authService = require('../services/authService')
 const to = require('../helper/to')
 const Pic = require('../models/Pic')
-const User = require('../models/User')
 const Follow = require('../models/Follow')
 const ObjectId = require('mongoose').Types.ObjectId
 /** Class Photo controller. */
 module.exports = class PicController {
   /*
-   * the class constructor
-   * */
-  constructor () {
-    console.log('constructor')
-  }
-
-  /*
-   * to fetch data
+   * to fetch the feed data of logged user
    * @async
    * @param {object} req - the request object
    * @param {object} res - the response object

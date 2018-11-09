@@ -8,14 +8,7 @@ const Like = require('../models/Like')
 /** Class Photo controller. */
 module.exports = class LikeController {
   /*
-   * the class constructor
-   * */
-  constructor () {
-    console.log('constructor')
-  }
-
-  /*
-   * to post data
+   * to like a picture
    * @async
    * @param {object} req - the request object
    * @param {object} res - the response object
@@ -44,7 +37,7 @@ module.exports = class LikeController {
   }
 
   /*
-   * to delete data
+   * to dislike
    * @async
    * @param {object} req - the request object
    * @param {object} res - the response object

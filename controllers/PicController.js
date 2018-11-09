@@ -9,14 +9,7 @@ const Pic = require('../models/Pic')
 /** Class Photo controller. */
 module.exports = class PicController {
   /*
-   * the class constructor
-   * */
-  constructor () {
-    console.log('constructor')
-  }
-
-  /*
-   * to fetch data
+   * to fetch pics by given user
    * @async
    * @param {object} req - the request object
    * @param {object} res - the response object
@@ -60,7 +53,7 @@ module.exports = class PicController {
   }
 
   /*
-   * to fetch data
+   * to fetch pics data
    * @async
    * @param {object} req - the request object
    * @param {object} res - the response object
@@ -102,7 +95,7 @@ module.exports = class PicController {
   }
 
   /*
-   * to get data
+   * to get pic by given id
    * @async
    * @param {object} req - the request object
    * @param {object} res - the response object
@@ -133,7 +126,7 @@ module.exports = class PicController {
   }
 
   /*
-   * to post data
+   * to post pic data
    * @async
    * @param {object} req - the request object
    * @param {object} res - the response object
