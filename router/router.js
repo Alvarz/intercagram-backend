@@ -32,6 +32,7 @@ module.exports = class router {
    * */
   routes () {
     /** users related routes */
+    this.router.get('/api/users/me', this.userCtrl.getMe.bind(this.userCtrl))
     this.router.get('/api/users', this.userCtrl.fetchData.bind(this.userCtrl))
     this.router.get('/api/users/:id', this.userCtrl.getData.bind(this.userCtrl))
     this.router.post('/api/users', this.userCtrl.postData.bind(this.userCtrl))
@@ -42,7 +43,8 @@ module.exports = class router {
     this.router.post('/api/pics/like', this.likeCtrl.postData.bind(this.likeCtrl))
     this.router.delete('/api/pics/unlike/:id', this.likeCtrl.deleteData.bind(this.likeCtrl))
     /** photo related routes */
-    this.router.get('/api/feed', this.feedCtrl.fetchFeed.bind(this.feedCtrl))
+    this.router.get('/api/pics/search/:query', this.picCtrl.search.bind(this.picCtrl))
+    this.router.get('/api/pics/feed', this.feedCtrl.fetchFeed.bind(this.feedCtrl))
     this.router.get('/api/users/:id/pics', this.picCtrl.fetchDataByUser.bind(this.picCtrl))
     this.router.get('/api/pics/:id', this.picCtrl.getData.bind(this.picCtrl))
     this.router.get('/api/pics', this.picCtrl.fetchData.bind(this.picCtrl))

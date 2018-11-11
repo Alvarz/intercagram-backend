@@ -42,7 +42,7 @@ module.exports.unAuth = (_message, res) => {
 const buildMessage = (_message, _data, _bool, _error = null) => {
   let resp = {
     message: _message,
-    bool: _bool
+    status: _bool
   }
 
   /** if we have some data add it to the object */

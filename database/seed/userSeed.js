@@ -15,7 +15,8 @@ module.exports = async () => {
         nickname: faker.internet.userName(),
         email: faker.internet.exampleEmail(),
         password: faker.internet.password(),
-        token: faker.random.uuid
+        token: faker.random.uuid,
+        profilePic: 'https://picsum.photos/200'
       }
 
       await User.create(u)

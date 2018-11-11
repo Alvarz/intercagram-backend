@@ -16,8 +16,6 @@ module.exports = class PicController {
    * @return {promise}
    * */
   async fetchFeed (req, res) {
-    console.log('feed')
-
     /** Access the provided 'page' and 'limt' query parameters */
     let selectedPage = req.query.page
     let limit = req.query.limit || 10

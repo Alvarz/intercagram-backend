@@ -6,8 +6,42 @@ const { unAuth, success, error } = require('../helper/responses')
 const authService = require('../services/authService')
 const to = require('../helper/to')
 const Pic = require('../models/Pic')
+const User = require('../models/User')
+const _ = require('lodash')
 /** Class Photo controller. */
 module.exports = class PicController {
+  /*
+   * to fetch pics by given user
+   * @async
+   * @param {object} req - the request object
+   * @param {object} res - the response object
+   * @return {promise}
+   * */
+  async search (req, res) {
+    let [err, resp] = await to(authService.getUserFromToken(req))
+    if (err) {
+      console.error(err)
+      return res.json(error('there was an error', err))
+    }
+    const currentUserId = resp.data
+
+    let query = req.params.query
+
+    const [ero, resultArray] = await to(User.search(query))
+    if (ero) {
+      console.error(ero)
+      return res.json(error('there was an error', ero))
+    }
+
+    const [er, pics] = await to(this.getAllSearchResultUsersPics(resultArray))
+    if (er) {
+      console.error(ero)
+      return res.json(error('there was an error', er))
+    }
+
+    return res.json(success('ok', pics))
+  }
+
   /*
    * to fetch pics by given user
    * @async
@@ -34,7 +68,10 @@ module.exports = class PicController {
 
     /* fetch users paginated */
     let [er, picsArray] = await to(Pic.paginate({ user: userId }, { page: selectedPage,
-      limit: limit
+      limit: limit,
+      sort: {
+        createdAt: -1 /* Sort by Date Added DESC */
+      }
       // populate: { path: 'user', select: ['name', 'lastname', 'nickname', 'email'] }
     }))
     if (er) {
@@ -76,7 +113,10 @@ module.exports = class PicController {
 
     /* fetch users paginated */
     let [er, picsArray] = await to(Pic.paginate({}, { page: selectedPage,
-      limit: limit
+      limit: limit,
+      sort: {
+        createdAt: -1 /* Sort by Date Added DESC */
+      }
       // populate: { path: 'user', select: ['name', 'lastname', 'nickname', 'email'] }
     }))
     if (er) {
@@ -165,7 +205,6 @@ module.exports = class PicController {
       body['url'] = uploaded[key]
 
       const cleaned = cleanObject(req.body, Pic.fillable)
-      console.log(cleaned, 'cleaned')
       let [er, saved] = await to(Pic.create(cleaned))
       if (er) {
         console.error(er)
@@ -223,5 +262,48 @@ module.exports = class PicController {
   async computeSingleLikesAndComments (pic) {
     await pic.computeLikes()
     await pic.computeComments()
+  }
+
+  /*
+   * compute the pics of the users founded on search
+   * @async
+   * @param {array} id - the users
+   * @return {promise}
+   * */
+  async getAllSearchResultUsersPics (users) {
+    let pics = []
+    for (let user of users) {
+      let res = await this.getUserPics(user._id)
+      pics.push(res)
+    }
+
+    let flattened = pics
+    /**
+     * if is one index array and also have a child who is an array too, flat it
+     * */
+    if (pics.length < 2 && pics.length > 0 && Array.isArray(pics[0])) {
+      flattened = _.flatten(pics)
+    }
+    /**  if all fail return an empty array */
+    return flattened || []
+  }
+
+  /*
+   * to fetch pics by given user
+   * @async
+   * @param {string} id - the user id
+   * @return {promise}
+   * */
+  async getUserPics (id) {
+    const [ero, resultArray] = await to(Pic.find({ user: id }, {}, {
+      sort: {
+        createdAt: -1 /* Sort by Date Added DESC */
+      }
+    }))
+    if (ero) {
+      console.error(ero)
+      return ero
+    }
+    return resultArray
   }
 }

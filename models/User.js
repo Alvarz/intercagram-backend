@@ -36,10 +36,9 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: false
   },
-  token: {
+  profilePic: {
     type: String,
-    required: false,
-    unique: false
+    required: false
   },
   following: {
     type: [Object],
@@ -59,13 +58,27 @@ const UserSchema = new mongoose.Schema({
 }, { timestamps: true }, { strict: true })
 
 /** fillable fields array. */
-UserSchema.statics.fillable = ['name', 'lastname', 'nickname', 'email', 'password' ]
+UserSchema.statics.fillable = ['name', 'lastname', 'nickname', 'email', 'password', 'profilePic' ]
 
 /** fillable fields array. */
-UserSchema.statics.hidden = ['password' ]
+UserSchema.statics.hidden = ['password', 'token' ]
 /** attach of the paginate plugin to the Schema. */
 UserSchema.plugin(mongoosePaginate)
 
+/*
+ * search for users
+ * @async
+ * @return {Promise}
+ * */
+UserSchema.statics.search = async function (query) {
+  let regexp = new RegExp(`^${query}$`, 'i')
+  return this.model('User').find({
+    $and: [
+      { $or: [ { email: regexp }, { nickname: regexp }, { name: regexp }, { lastname: regexp } ] }
+    ]
+  }
+  )
+}
 /*
  * compute the followers (follwers is where user us followed)
  * @async
@@ -90,6 +103,7 @@ UserSchema.methods.computeFollowing = async function () {
 UserSchema.methods.userFollowed = async function (userId) {
   const res = await Follow.countDocuments({ follower: userId, followed: this._id })
   console.log(res, this.id)
+  console.log('user follow')
   this.wasFollowedByUser = (res > 0)
 }
 

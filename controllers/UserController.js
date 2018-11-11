@@ -66,6 +66,43 @@ module.exports = class UserController {
   }
 
   /*
+   * get the data of the logged user
+   * @async
+   * @param {object} req - the request object
+   * @param {object} res - the response object
+   * @return {promise}
+   * */
+  async getMe (req, res) {
+    let [er, respo] = await to(authService.getUserFromToken(req))
+    if (er) {
+      console.error(er)
+      return res.json(error('there was an error', er))
+    }
+
+    const currentUserId = respo.data
+
+    req.params.id = currentUserId
+    req.params.cleanFollow = true
+    const r = await this.getData(req, res)
+    return r
+
+    /* jlet [err, resp] = await to(User.findById(currentUserId))
+    if (err) {
+      console.error(err)
+      return res.json(error('there was an error', err))
+    }
+
+    if (resp === null) {
+      /** compute the followers of the user and the follwing by the user */
+    /* return res.json(success('ok', {}))
+    } */
+
+    /** clean the user of hidden elements and returns it */
+    /* const cleaned = this.cleanObjectFromHidden(resp)
+    return res.json(success('ok', cleaned)) */
+  }
+
+  /*
    * to fetch data
    * @async
    * @param {object} req - the request object
@@ -73,6 +110,14 @@ module.exports = class UserController {
    * @return {promise}
    * */
   async fetchData (req, res) {
+    /** get the user */
+    let [er, respo] = await to(authService.getUserFromToken(req))
+    if (er) {
+      console.error(er)
+      return res.json(error('there was an error', er))
+    }
+    const currentUserId = respo.data
+
     /** Access the provided 'page' and 'limt' query parameters */
     let selectedPage = req.query.page
     let limit = req.query.limit || 10
@@ -81,19 +126,23 @@ module.exports = class UserController {
     if (selectedPage < 1) { selectedPage = 1 }
 
     /* fetch users paginated */
-    let [err, resp] = await to(User.paginate({}, { page: selectedPage, limit: limit }))
+    let [err, userArray] = await to(User.paginate({}, { page: selectedPage, limit: limit }))
     if (err) {
       console.error(err)
       return res.json(error('there was an error', err))
     }
 
-    /** await resp.docs.forEach(async (user) => {
-      await user.computeFollowing()
-      await user.computeFollowers()
-    }) */
+    if (userArray.docs.length > 0) {
+      for (let key in userArray.docs) {
+        await userArray.docs[key].userFollowed(currentUserId)
+        await userArray.docs[key].computeFollowing()
+        await userArray.docs[key].computeFollowers()
+      }
+    }
+
     /** clean all users from hidden fields */
-    resp.docs = this.cleanAllElements(resp.docs)
-    return res.json(success('fetching data', resp))
+    userArray.docs = this.cleanAllElements(userArray.docs)
+    return res.json(success('fetching data', userArray))
   }
 
   /*
@@ -104,6 +153,15 @@ module.exports = class UserController {
    * @return {promise}
    * */
   async getData (req, res) {
+    /** get the user */
+
+    let [er, respo] = await to(authService.getUserFromToken(req))
+    if (er) {
+      console.error(er)
+      return res.json(error('there was an error', er))
+    }
+    const currentUserId = respo.data
+
     let id = req.params.id
 
     let [err, resp] = await to(User.findById(id))
@@ -118,10 +176,12 @@ module.exports = class UserController {
       return res.json(success('ok', {}))
     }
 
-    await resp.computeFollowing()
-    await resp.computeFollowers()
+    if (!req.params.cleanFollow) {
+      await resp.userFollowed(currentUserId)
+      await resp.computeFollowing()
+      await resp.computeFollowers()
+    }
 
-    console.log(resp)
     /** clean the user of hidden elements and returns it */
     const cleaned = this.cleanObjectFromHidden(resp)
     return res.json(success('ok', cleaned))

@@ -64,12 +64,16 @@ PicSchema.statics.fillable = ['url', 'likes', 'comments', 'description', 'user' 
 PicSchema.methods.computeComments = async function (doc, next) {
   if (Array.isArray(doc)) {
     for (let key in doc) {
-      let comments = await comment.find({ pic: doc[key]._id })
+      let comments = await comment.find({ pic: doc[key]._id }, {}, { sort: {
+        createdAt: -1 /* Sort by Date Added DESC */
+      } })
       doc[key].commentsQty = comments.length
       doc[key].comments = comments
     }
   } else {
-    let comments = await comment.find({ pic: doc._id })
+    let comments = await comment.find({ pic: doc._id }, {}, { sort: {
+      createdAt: -1 /* Sort by Date Added DESC */
+    } })
     doc.commentsQty = comments.length
     doc.comments = comments
   }
@@ -98,7 +102,6 @@ PicSchema.methods.computeLikes = async function (doc, next) {
  * */
 PicSchema.methods.userLiked = async function (userId) {
   const res = await Like.countDocuments({ user: userId, pic: this._id })
-  console.log(res, this.id)
   this.wasLikedByUser = (res > 0)
 }
 
@@ -107,7 +110,7 @@ PicSchema.methods.userLiked = async function (userId) {
  * @param {function} next
  * */
 PicSchema.methods.autoPopulate = function (next) {
-  this.populate({ path: 'user', select: ['name', 'lastname', 'nickname', 'email'] })
+  this.populate({ path: 'user', select: ['name', 'lastname', 'nickname', 'email', 'profilePic'] })
   next()
 }
 
