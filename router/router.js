@@ -65,6 +65,7 @@ module.exports = class router {
     this.router.delete('/api/follow/:user_id', this.followCtrl.unfollowUser.bind(this.followCtrl))
 
     this.router.post('/signin', this.userCtrl.signin.bind(this.userCtrl))
+    this.router.post('/signup', this.userCtrl.postData.bind(this.userCtrl))
     return this.router
   }
 }
