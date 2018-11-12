@@ -16,7 +16,14 @@ app.use(bodyParser.json())
 /** file uplooad middleware */
 app.use(fileUpload())
 /**  cors middleware */
-app.use(cors())
+const corsOptions = {
+  allowedHeaders: ['Accept-Version', 'Authorization', 'Credentials', 'Content-Type'],
+  exposedHeaders: ['x-access-token']
+}
+
+app.all('*', cors(corsOptions))
+
+// app.use(cors())
 app.use('/', router.routes())
 // console.log(`${__dirname}/storage`)
 app.use('/photos', express.static(path.join(`${__dirname}/storage`)))

@@ -18,7 +18,7 @@ module.exports = class PicController {
   async fetchFeed (req, res) {
     /** Access the provided 'page' and 'limt' query parameters */
     let selectedPage = req.query.page
-    let limit = req.query.limit || 10
+    let limit = req.query.limit || 50
 
     /** the user who own the pics */
     let [eror, resp] = await to(authService.getUserFromToken(req))

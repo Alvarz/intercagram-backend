@@ -26,7 +26,7 @@ module.exports = class FollowController {
     let userId = req.params.user_id
     /** Access the provided 'page' and 'limt' query parameters */
     let selectedPage = req.query.page
-    let limit = req.query.limit || 10
+    let limit = req.query.limit || 50
 
     /** validate page is not < than 0 */
     if (selectedPage < 1) { selectedPage = 1 }
@@ -69,7 +69,7 @@ module.exports = class FollowController {
     let userId = req.params.user_id
     /** Access the provided 'page' and 'limt' query parameters */
     let selectedPage = req.query.page
-    let limit = req.query.limit || 10
+    let limit = req.query.limit || 50
 
     /** validate page is not < than 0 */
     if (selectedPage < 1) { selectedPage = 1 }

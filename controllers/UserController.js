@@ -120,7 +120,7 @@ module.exports = class UserController {
 
     /** Access the provided 'page' and 'limt' query parameters */
     let selectedPage = req.query.page
-    let limit = req.query.limit || 10
+    let limit = req.query.limit || 50
 
     /** validate page is not < than 0 */
     if (selectedPage < 1) { selectedPage = 1 }
