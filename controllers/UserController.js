@@ -4,7 +4,9 @@ const { unAuth, success, error } = require('../helper/responses')
 const to = require('../helper/to')
 const User = require('../models/User')
 const authService = require('../services/authService')
-/** Class User controller. */
+/**
+  * @class User controller.
+  * */
 module.exports = class UserController {
   /*
    * Login and generate the jwt
@@ -37,12 +39,13 @@ module.exports = class UserController {
     /** set the jwt header to the response */
     res.set({ 'x-access-token': token })
 
-    /** update the token on users model */
-    let [errors, response] = await to(User.findByIdAndUpdate(user._id, { token: token }, { new: true }))
+    /** THIS METHOD WAS COMMENTED BECAUSE IS NOT USEFUL RIGHT NOW */
+    /** update the token on users model  */
+    /* let [errors, response] = await to(User.findByIdAndUpdate(user._id, { token: token }, { new: true }))
     if (errors) {
       console.error(errors)
       return res.json(error('there was an error', errors))
-    }
+    } */
 
     /** clean the user of hidden elements and returns it */
     const cleaned = this.cleanObjectFromHidden(user)
@@ -83,23 +86,8 @@ module.exports = class UserController {
 
     req.params.id = currentUserId
     req.params.cleanFollow = true
-    const r = await this.getData(req, res)
-    return r
-
-    /* jlet [err, resp] = await to(User.findById(currentUserId))
-    if (err) {
-      console.error(err)
-      return res.json(error('there was an error', err))
-    }
-
-    if (resp === null) {
-      /** compute the followers of the user and the follwing by the user */
-    /* return res.json(success('ok', {}))
-    } */
-
-    /** clean the user of hidden elements and returns it */
-    /* const cleaned = this.cleanObjectFromHidden(resp)
-    return res.json(success('ok', cleaned)) */
+    const re = await this.getData(req, res)
+    return re
   }
 
   /*

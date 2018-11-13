@@ -7,6 +7,7 @@ const Router = require('./router/router')
 const app = express()
 const cors = require('cors')
 const path = require('path')
+require('dotenv').config()
 require('./database/database')
 
 /** the router instance */

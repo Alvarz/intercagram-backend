@@ -5,15 +5,11 @@ const { success, error } = require('../helper/responses')
 const authService = require('../services/authService')
 const to = require('../helper/to')
 const Comment = require('../models/Comment')
-/** Class Comment controller. */
-module.exports = class CommentController {
-  /*
-   * the class constructor
-   * */
-  constructor () {
-    console.log('constructor')
-  }
 
+/**
+  * @class  Comment controller.
+  * */
+module.exports = class CommentController {
   /*
    * to fetch data
    * @async
@@ -52,7 +48,6 @@ module.exports = class CommentController {
     }
 
     req.body['user'] = resp.data
-    console.log(req.body)
 
     const cleaned = cleanObject(req.body, Comment.fillable)
     let [ero, created] = await to(Comment.create(cleaned))

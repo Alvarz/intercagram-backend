@@ -2,13 +2,15 @@
 const path = require('path')
 const to = require('../helper/to')
 
-/** file upload wrapper class */
+/*
+ * @class file upload wrapper
+ * */
 module.exports = class fileUploadWrapper {
   /*
    * class constructor
    */
   constructor () {
-    this.allowed = ['png', 'jpg', 'jpeg']
+    this.allowed = ['image/png', 'image/jpeg', 'image/jpg']
     this.appdir = path.dirname(require.main.filename)
   }
 
@@ -28,6 +30,9 @@ module.exports = class fileUploadWrapper {
       for (let key in req.files) {
       /** The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file */
         let sampleFile = req.files[key]
+        if (!this.isAllowerd(sampleFile.mimetype)) {
+          reject('not allowerd format')
+        }
 
         /** upload the single file */
         let [err, resp ] = await to(this.uploadFile(sampleFile))
@@ -38,6 +43,15 @@ module.exports = class fileUploadWrapper {
       /** all was good, carry on! */
       resolve(uploadedFiles)
     })
+  }
+
+  /*
+   * validate if is a accepted mimetype
+   * @param {string} type
+   * @return {boolean}
+   */
+  isAllowerd (type) {
+    return (this.allowed.indexOf(type) > -1)
   }
 
   /*

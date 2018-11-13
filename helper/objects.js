@@ -15,6 +15,12 @@ module.exports.cleanObject = (data, fillable) => {
   return newObject
 }
 
+/**
+ * clean the object to be updated due model
+ * @param {object} data .
+ * @param {array} hidden .
+ * @return {object} .
+ */
 module.exports.removeHiddenObject = (data, hidden) => {
   let newObject = {}
   Object.keys(data).forEach((key) => {

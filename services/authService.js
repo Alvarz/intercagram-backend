@@ -1,7 +1,9 @@
 'use strict'
 
 const jwt = require('jsonwebtoken')
-
+/*
+ * @class auth service
+ * */
 module.exports = class authService {
   /*
    * the salt

@@ -3,6 +3,10 @@ const faker = require('faker')
 const User = require('../../models/User')
 const Pic = require('../../models/Pic')
 
+/*
+ * method to seed some pics
+ * @Function seeder
+ * */
 module.exports = async () => {
   const maxPics = 5
 

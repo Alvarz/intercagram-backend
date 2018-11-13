@@ -2,6 +2,10 @@
 const User = require('../../models/User')
 const Follow = require('../../models/Follow')
 
+/*
+ * generate random followers and following
+ * @Function seeder
+ */
 module.exports = async () => {
   Follow.deleteMany({})
   const maxFollowPerUser = 3

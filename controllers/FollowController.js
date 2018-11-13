@@ -5,7 +5,9 @@ const { success, error } = require('../helper/responses')
 const authService = require('../services/authService')
 const to = require('../helper/to')
 const Follow = require('../models/Follow')
-/** Class Photo controller. */
+/**
+  * @class Photo controller.
+  * */
 module.exports = class FollowController {
   /*
    * to fetch followinda data of logged user
@@ -34,7 +36,6 @@ module.exports = class FollowController {
     /* fetch users paginated */
     let [err, fArray] = await to(Follow.paginate({ follower: userId }, { page: selectedPage,
       limit: limit
-      // populate: { path: 'user', select: ['name', 'lastname', 'nickname', 'email'] }
     }))
     if (err) {
       console.error(err)
@@ -47,10 +48,9 @@ module.exports = class FollowController {
         await fArray.docs[key].userFollowFollowers(currentUserId)
       }
     }
-
-    // await this.computeAllFollowsAndComments(picsArray)
     return res.json(success('ok', fArray))
   }
+
   /*
    * to fetch followers data of logged users
    * @async
@@ -110,7 +110,6 @@ module.exports = class FollowController {
     }
 
     req.body['follower'] = resp.data
-    console.log(req.body)
 
     const cleaned = cleanObject(req.body, Follow.fillable)
     let [ero, created] = await to(Follow.create(cleaned))

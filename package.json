@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "main": "index.js",
   "scripts": {
+    "test": "./node_modules/.bin/mocha --reporter spec --exit",
     "dev": "./node_modules/nodemon/bin/nodemon.js ./index.js",
+    "seed": "node database/seed/index.js",
     "lint": "standard && standard --fix"
   },
   "author": "Carlos Alvarez <carlosxviii@gmail.com>",
@@ -21,6 +23,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "chai-spies": "^1.0.0",
     "faker": "^4.1.0",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.5"

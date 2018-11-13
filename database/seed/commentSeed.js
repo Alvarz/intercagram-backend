@@ -4,6 +4,10 @@ const User = require('../../models/User')
 const Pic = require('../../models/Pic')
 const Comment = require('../../models/Comment')
 
+/*
+ * generate random commnets 
+ * @Function seeder
+ */
 module.exports = async () => {
   const maxComments = Math.floor(Math.random() * 1) + 20
 

@@ -5,7 +5,9 @@ const { success, error } = require('../helper/responses')
 const authService = require('../services/authService')
 const to = require('../helper/to')
 const Like = require('../models/Like')
-/** Class Photo controller. */
+/**
+  * @class Photo controller.
+  * */
 module.exports = class LikeController {
   /*
    * to like a picture
@@ -24,7 +26,6 @@ module.exports = class LikeController {
     }
 
     req.body['user'] = resp.data
-    console.log(req.body)
 
     const cleaned = cleanObject(req.body, Like.fillable)
     let [ero, created] = await to(Like.create(cleaned))

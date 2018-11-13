@@ -2,7 +2,10 @@
 const User = require('../../models/User')
 const Pic = require('../../models/Pic')
 const Like = require('../../models/Like')
-
+/*
+ * method to seed some likes
+ * @Function seeder
+ * */
 module.exports = async () => {
   const maxLikes = Math.floor(Math.random() * 1) + 20
 

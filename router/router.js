@@ -8,7 +8,9 @@ const FollowCtrl = require('../controllers/FollowController')
 const FeedCtrl = require('../controllers/FeedController')
 
 const cors = require('cors')
-/** Class Main system router. */
+/**
+  * @class Main system router.
+  * */
 module.exports = class router {
   /*
    * the app constructor

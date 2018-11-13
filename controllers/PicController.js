@@ -2,13 +2,15 @@
 
 const { cleanObject } = require('../helper/objects')
 const UploadService = require('../services/uploadService')
-const { unAuth, success, error } = require('../helper/responses')
+const { success, error } = require('../helper/responses')
 const authService = require('../services/authService')
 const to = require('../helper/to')
 const Pic = require('../models/Pic')
 const User = require('../models/User')
 const _ = require('lodash')
-/** Class Photo controller. */
+/**
+  * @class Pic controller.
+  * */
 module.exports = class PicController {
   /*
    * to fetch pics by given user
@@ -196,7 +198,7 @@ module.exports = class PicController {
      */
     for (let key in uploaded) {
       /** added the url to the pic */
-      uploaded[key] = `${req.get('host')}${uploaded[key]}`
+      uploaded[key] = `http://${req.get('host')}${uploaded[key]}`
       /** get the data from the body */
       let body = req.body
       /** set the user_id from token response */
@@ -211,7 +213,6 @@ module.exports = class PicController {
         return res.json(error('there was an error', er))
       }
     }
-
     return res.json(success('Element was created', uploaded))
   }
 

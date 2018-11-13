@@ -6,7 +6,9 @@ const to = require('../helper/to')
 const Pic = require('../models/Pic')
 const Follow = require('../models/Follow')
 const ObjectId = require('mongoose').Types.ObjectId
-/** Class Photo controller. */
+/**
+  * @class Photo controller.
+  * */
 module.exports = class PicController {
   /*
    * to fetch the feed data of logged user

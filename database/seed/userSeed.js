@@ -2,6 +2,10 @@ const faker = require('faker')
 
 const User = require('../../models/User')
 
+/*
+ * method to seed some users
+ * @Function seeder
+ * */
 module.exports = async () => {
   const maxUsers = 100
 
