@@ -13,7 +13,7 @@ cp .env.example .env
 yarn install 
 ```
 
-## seed
+## Seed
 You can seed the database with random data so that, there will be a test users
 to follow and be followed. In order to seed you need to run 
 
@@ -29,7 +29,7 @@ You can start the server with the command
 ```bash
 yarn dev
 ```
-### List of pubic endpoints
+### List of public endpoints
 | Type | URL |
 | --- | --- |
 | POST | http://127.0.0.1:3000/signin | 
