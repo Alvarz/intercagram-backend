@@ -11,21 +11,24 @@ system, also you would need node 8.12, npm 6.4 or yarn 1. 12
 ```bash
 cp .env.example .env
 yarn install 
-yarn run dev
 ```
 
 ## seed
 You can seed the database with random data so that, there will be a test users
 to follow and be followed. In order to seed you need to run 
 
-```
+```bash
 yarn seed
-
 ```
 Now you can start searching using the app.
 
 ## Usage
 
+You can start the server with the command
+
+```bash
+yarn dev
+```
 ### List of pubic endpoints
 | Type | URL |
 | --- | --- |
